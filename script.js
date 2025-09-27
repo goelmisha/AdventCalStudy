@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalTimeDisplay = document.getElementById('total-time');
     const startBtn = document.getElementById('start-btn');
     const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = document.getElementById('reset-btn'); 
+    resetBtn.addEventListener('click', resetProgress);
     const grid = document.getElementById('calendar-grid');
     const progressBar = document.getElementById('progress-bar');
     const overlay = document.querySelector('.overlay');
@@ -43,6 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(timerInterval);
         timerInterval = null;
         startBtn.textContent = 'Start';
+    }
+
+    function resetProgress() {
+        // 1. Stop the timer if it's running.
+        stopTimer();
+
+        // 2. Ask the user to confirm, as this is a destructive action.
+        const isConfirmed = confirm("Are you sure you want to reset all your progress? This cannot be undone.");
+
+        if (isConfirmed) {
+            // 3. Reset the state variables.
+            totalSeconds = 0;
+            completedBoxes.clear();
+
+            // 4. Remove the saved data from the browser's storage.
+            localStorage.removeItem('adventCalendarProgress');
+
+            // 5. Update the UI to reflect the reset state.
+            updateUI();
+            
+            console.log("Progress has been reset.");
+        }
     }
 
     // --- UI UPDATES ---
@@ -74,29 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // THIS IS THE CORRECTED FUNCTION
+    // THIS IS THE CORRECTED FUNCTION
     function updateBoxes() {
         // How many boxes has the user earned with their time?
         const unlockedCount = calculateUnlockedBoxes(totalSeconds);
-        // How many boxes has the user already opened and completed?
-        const completedCount = completedBoxes.size;
 
         const boxes = document.querySelectorAll('.box');
         boxes.forEach((box, index) => {
             const boxId = index + 1;
 
-            // First, clear any previous state
+            // Clear previous state classes
             box.classList.remove('locked', 'unlocked', 'completed');
 
-            // Condition 1: If the box ID is in the completed set, mark it as 'completed'.
+            // Condition 1: If the box is already completed, mark it as such.
             if (completedBoxes.has(boxId.toString())) {
                 box.classList.add('completed');
             
-            // Condition 2: If enough time is earned AND this is the very next box in sequence...
-            } else if (boxId <= unlockedCount && boxId === completedCount + 1) {
-                // ...then this is the one and only box that should be unlocked.
+            // Condition 2: If the box's number is less than or equal to the earned count...
+            } else if (boxId <= unlockedCount) {
+                // ...it is available to be opened.
                 box.classList.add('unlocked');
             
-            // Condition 3: All other boxes are locked.
+            // Condition 3: Otherwise, it remains locked.
             } else {
                 box.classList.add('locked');
             }

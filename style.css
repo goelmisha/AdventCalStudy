@@ -227,3 +227,13 @@ h1, h2 {
     color: var(--bg-color);
     cursor: pointer;
 }
+
+#reset-btn {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+#reset-btn:hover {
+    background-color: #ff6b6b;
+    color: var(--bg-color); /* Use the same background color as your page */
+}
