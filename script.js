@@ -75,18 +75,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // THIS IS THE CORRECTED FUNCTION
     function updateBoxes() {
+        // How many boxes has the user earned with their time?
         const unlockedCount = calculateUnlockedBoxes(totalSeconds);
+        // How many boxes has the user already opened and completed?
+        const completedCount = completedBoxes.size;
+
         const boxes = document.querySelectorAll('.box');
         boxes.forEach((box, index) => {
             const boxId = index + 1;
 
-            // Preserve the size class by using classList instead of className
+            // First, clear any previous state
             box.classList.remove('locked', 'unlocked', 'completed');
 
+            // Condition 1: If the box ID is in the completed set, mark it as 'completed'.
             if (completedBoxes.has(boxId.toString())) {
                 box.classList.add('completed');
-            } else if (boxId <= unlockedCount) {
+            
+            // Condition 2: If enough time is earned AND this is the very next box in sequence...
+            } else if (boxId <= unlockedCount && boxId === completedCount + 1) {
+                // ...then this is the one and only box that should be unlocked.
                 box.classList.add('unlocked');
+            
+            // Condition 3: All other boxes are locked.
             } else {
                 box.classList.add('locked');
             }
