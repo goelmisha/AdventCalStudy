@@ -74,14 +74,15 @@ h1, h2 {
 /* --- Calendar Grid & Boxes --- */
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    /* Create a 6-column grid and let rows size automatically */
+    grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(100px, auto); /* Ensure rows have a minimum height */
     gap: 1rem;
     margin-top: 2rem;
-    perspective: 1000px; /* For 3D effects if you add them */
 }
 
+/* Base box styles remain the same, but remove aspect-ratio */
 .box {
-    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,6 +91,32 @@ h1, h2 {
     border-radius: 10px;
     position: relative;
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* The aspect-ratio is removed from here and handled by the size classes */
+}
+
+/* --- NEW SIZE CLASSES --- */
+.size-normal {
+    grid-column: span 1;
+    grid-row: span 1;
+    aspect-ratio: 1 / 1; /* A standard square */
+}
+
+.size-wide {
+    grid-column: span 2; /* Span 2 columns */
+    grid-row: span 1;
+    aspect-ratio: 2 / 1;
+}
+
+.size-tall {
+    grid-column: span 1;
+    grid-row: span 2; /* Span 2 rows */
+    aspect-ratio: 1 / 2;
+}
+
+.size-large {
+    grid-column: span 2; /* Span 2 columns and 2 rows */
+    grid-row: span 2;
+    aspect-ratio: 1 / 1;
 }
 
 .box.locked {
