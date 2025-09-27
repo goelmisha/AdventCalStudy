@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Advent Calendar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>Study Advent Calendar</h1>
+        
+        <div class="timer-container">
+            <h2 id="timer-display">00:00:00</h2>
+            <div class="timer-controls">
+                <button id="start-btn">Start</button>
+                <button id="stop-btn">Stop</button>
+            </div>
+            <p>Total time studied: <span id="total-time">0</span> seconds</p>
+        </div>
+
+        <div class="progress-container">
+            <p>Progress to next reward:</p>
+            <div class="progress-bar-outline">
+                <div id="progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div id="calendar-grid" class="calendar-grid">
+            </div>
+    </div>
+    
+    <div class="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
