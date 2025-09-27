@@ -73,17 +73,22 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.floor(seconds / SECONDS_PER_BOX);
     }
 
+    // THIS IS THE CORRECTED FUNCTION
     function updateBoxes() {
         const unlockedCount = calculateUnlockedBoxes(totalSeconds);
         const boxes = document.querySelectorAll('.box');
         boxes.forEach((box, index) => {
             const boxId = index + 1;
+
+            // Preserve the size class by using classList instead of className
+            box.classList.remove('locked', 'unlocked', 'completed');
+
             if (completedBoxes.has(boxId.toString())) {
-                box.className = 'box completed';
+                box.classList.add('completed');
             } else if (boxId <= unlockedCount) {
-                box.className = 'box unlocked';
+                box.classList.add('unlocked');
             } else {
-                box.className = 'box locked';
+                box.classList.add('locked');
             }
         });
     }
@@ -129,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- DEBUG HELPER FUNCTION ---
-    // (Remove this before deploying your project)
     function addTestTime(hours) {
         const secondsToAdd = hours * 3600;
         totalSeconds += secondsToAdd;
@@ -140,10 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIALIZATION ---
     function initialize() {
+        const sizeWeights = [
+            'size-normal', 'size-normal', 'size-normal', 'size-normal', 'size-normal',
+            'size-wide', 'size-tall'
+        ];
+
         for (let i = 1; i <= TOTAL_BOXES; i++) {
             const box = document.createElement('div');
             box.dataset.id = i;
             box.classList.add('box', 'locked');
+
+            const randomSizeClass = sizeWeights[Math.floor(Math.random() * sizeWeights.length)];
+            box.classList.add(randomSizeClass);
 
             const label = document.createElement('span');
             label.classList.add('box-label');
@@ -164,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
             box.addEventListener('click', handleBoxClick);
         }
         
-        // Use event delegation for complete buttons for better performance
         document.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('complete-btn')) {
                 handleCompletion(event);
@@ -174,19 +185,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startBtn.addEventListener('click', startTimer);
         stopBtn.addEventListener('click', stopTimer);
         
-
         loadProgress();
     }
 
     initialize();
     
     // --- DEBUG HELPERS (Expose to Console) ---
-    // Add these lines to make the functions and a setter available globally
     window.addTestTime = addTestTime;
     window.updateUI = updateUI;
     window.setTotalSeconds = (seconds) => {
         totalSeconds = seconds;
         console.log(`totalSeconds has been set to ${totalSeconds}`);
     };
-    
-}); // This is the final closing bracket and parenthesis
+});
