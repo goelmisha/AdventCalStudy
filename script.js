@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURATION ---
-    const SECONDS_PER_BOX = 1500; // 25 minutes
+    const SECONDS_PER_BOX = 21600; // 25 minutes
     const TOTAL_BOXES = 24;
     const QUOTES = [
         "The only way to do great work is to love what you do.", "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -82,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
         totalTimeDisplay.textContent = totalSeconds;
         updateBoxes();
         updateProgressBar();
+        const pendingCount = calculatePendingBoxes();
+        document.getElementById('pending-rewards-count').textContent = pendingCount;
     }
 
     function updateProgressBar() {
@@ -95,6 +97,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- BOX LOGIC ---
     function calculateUnlockedBoxes(seconds) {
         return Math.floor(seconds / SECONDS_PER_BOX);
+    }
+
+    function calculatePendingBoxes() {
+        // 1. Calculate the total number of boxes earned from study time.
+        const earnedCount = calculateUnlockedBoxes(totalSeconds);
+        
+        // 2. Get the number of boxes that have already been opened and completed.
+        const openedCount = completedBoxes.size;
+        
+        // 3. The difference is the number of rewards waiting to be opened.
+        const pendingCount = earnedCount - openedCount;
+        
+        // Ensure the count is never negative.
+        return Math.max(0, pendingCount);
     }
 
     // THIS IS THE CORRECTED FUNCTION
